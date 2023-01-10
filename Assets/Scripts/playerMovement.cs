@@ -22,11 +22,15 @@ public class playerMovement : MonoBehaviour
     [SerializeField]
     private bool grounded;
 
+    Animator anim;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = rb.GetComponent<SpriteRenderer>();
+
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -41,16 +45,33 @@ public class playerMovement : MonoBehaviour
         {
             sr.flipX = true;
             camPoint.transform.localPosition = new Vector3(-0.5f, camPoint.transform.localPosition.y, camPoint.transform.localPosition.z);
+            anim.SetBool("isRunning", true);
         }
+
         if (Input.GetAxis("Horizontal") > 0)
         {
             sr.flipX = false;
             camPoint.transform.localPosition = new Vector3(0.5f, camPoint.transform.localPosition.y, camPoint.transform.localPosition.z);
+            anim.SetBool("isRunning", true);
+        }
+
+        if (Input.GetAxis("Horizontal") == 0)
+        {
+            anim.SetBool("isRunning", false);
         }
 
             // ----------------------------------- SALTO Y RAYCAST ----------------------------------- //
 
-            grounded = false;
+        grounded = false;
+
+        if (grounded == false)
+        {
+            anim.SetBool("isGrounded", false);
+        }
+        else
+        {
+            anim.SetBool("isGrounded", true);
+        }
 
         for (int i = 0; i < originPoints.Count; i++)
         {
